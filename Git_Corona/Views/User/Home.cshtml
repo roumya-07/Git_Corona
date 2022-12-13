@@ -1,0 +1,114 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Home-User Registration";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#btn_reg").click(function () {
+            if (txtChkValidation('txtUserID') == true && txtChkValidation('txtPasword') == true && txtChkValidation('txtUserName') == true && txtChkValidation('txtPhone') == true && txtChkValidation('txtemail') == true)
+            {
+                var login = {
+                    UserID: $("#txtUserID").val(),
+                    Password: $("#txtPasword").val(),
+                    UserName: $("#txtUserName").val(),
+                    PhoneNo: $("#txtPhone").val(),
+                    Email: $("#txtemail").val(),
+                };
+                $.getJSON("/User/UserCreat", login, function (data) {
+
+                    data = JSON.parse(data);
+                    if (data == 1) {
+                        alert("User Create. Please go to login Page");
+                        Reset();
+                    } else {
+                        alert("UserID already Registered.");
+                    }
+                });
+            } else {
+                alert("Please enter all text Box!.");
+                txtChkValidation('txtUserID');
+                txtChkValidation('txtPasword');
+                txtChkValidation('txtUserName');
+                txtChkValidation('txtPhone');
+                txtChkValidation('txtemail');
+
+            }
+        });
+    });
+
+
+    function Reset() {
+        $("#txtUserID").val("");
+        $("#txtPasword").val("");
+        $("#txtUserName").val("");
+        $("#txtPhone").val("");
+        $("#txtemail").val("");
+    }
+
+</script>
+<table id="tbl" class="table table-bordered">
+    <tr>
+        <td align="justify">
+            @Html.Partial("View")
+
+        </td>
+        <td>
+            <table class="table  table-bordered table-striped">
+                <tr>
+                    <th colspan="2" align="justify">
+                        New User Regitration
+                    </th>
+                </tr>
+                <tr>
+                    <th align="right">User ID</th>
+                    <td>
+                        <input id="txtUserID" type="text" class="form-control" placeholder="Enter User ID" onkeypress="txtChkValidation('txtUserID')" />
+                    </td>
+
+                </tr>
+                <tr>
+                    <th align="right">Password</th>
+                    <td>
+                        <input id="txtPasword" type="password" class="form-control" placeholder="Enter Password" onkeypress="txtChkValidation('txtPasword')" />
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <th align="right">User Name</th>
+                    <td>
+                        <input id="txtUserName" type="text" class="form-control" placeholder="Enter your name" onkeypress="txtChkValidation('txtUserName')" />
+                    </td>
+
+                </tr>
+                <tr>
+                    <th align="right">Phone No.</th>
+                    <td>
+                        <input id="txtPhone" type="number" class="form-control" placeholder="Enter your phone number" onkeypress="txtChkValidation('txtPhone')" onchange="Phonevalidate('txtPhone','lblErrorPhone')" />
+                        <span id="lblErrorPhone" style="color:red"></span>
+                    </td>
+
+                </tr>
+                <tr>
+                    <th align="right">Email</th>
+                    <td>
+                        <input id="txtemail" type="email" class="form-control" placeholder="Enter your email" onkeypress="txtChkValidation('txtemail')" onchange="emailValidate('txtemail','lblError')" />
+                        <span id="lblError" style="color:red"></span>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="2" align="right">
+                        <input type="button" id="btn_reg" value="Registration" />
+                    </td>
+                </tr>
+            </table>
+
+        </td>
+    </tr>
+</table>
+
