@@ -6,3 +6,40 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+<table id="tbl" class="table table-bordered">
+    <tr>
+        <td align="justify">
+            @*@Html.Partial("View")*@
+
+
+        </td>
+        <td>
+            <table class="table  table-striped">
+
+                <tr>
+                    <th colspan="2" align="justify"> Login</th>
+                </tr>
+                <tr>
+                    <th align="right">User ID</th>
+                    <td>
+                        <input id="txtUserID" type="text" class="form-control" placeholder="Enter User ID" required />
+                    </td>
+
+                </tr>
+                <tr>
+                    <th align="right">Password</th>
+                    <td>
+                        <input id="txtPasword" type="password" class="form-control" placeholder="Enter Password" required />
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="2" align="right">
+                        <input type="button" id="btnLogin" value="Login" />
+                    </td>
+                </tr>
+            </table>
+
+        </td>
+    </tr>
+</table>
