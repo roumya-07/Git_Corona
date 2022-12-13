@@ -1,0 +1,187 @@
+﻿@{
+    ViewData["Title"] = "Corona Affted Details";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSave").click(function () {
+
+            SaveData();
+
+        });
+        CoronaDetails();
+
+        //$.getJSON("/User/Getstate", function (data) {
+        //    data = JSON.parse(data);
+        //    $.each(data, function (i, vl) {
+        //        $("#drpState").append('<option value=' + vl.StateID + '>' + vl.StateName + '</option>');
+        //    });
+        //});
+
+        $("#drpState").change(function () {
+            var id = $(this).val();
+            $("#drpBlock").empty();
+            $("#drpBlock").append('<option value="0">--Select Block--</option>');
+            $.getJSON("/User/Getblock", { ID: id }, function (data) {
+                data = JSON.parse(data);
+                $.each(data, function (i, vl) {
+                    $("#drpBlock").append('<option value=' + vl.BlockID + '>' + vl.BlockName + '</option>');
+                });
+            });
+        });
+        $("#drpBlock").change(function () {
+            var id = $(this).val();
+            $("#drpPanchyat").empty();
+            $("#drpPanchyat").append('<option value="">--Select Panchyat--</option>');
+            $.getJSON("/User/GetPanchyat", { ID: id }, function (data) {
+                data = JSON.parse(data);
+                $.each(data, function (i, vl) {
+                    $("#drpPanchyat").append('<option value=' + vl.PanchyatID + '>' + vl.PanchyatName + '</option>');
+                });
+            });
+        });
+
+    });
+    function CoronaDetails() {
+        var Totalaffect = 0;
+        var TotalDeath = 0;
+        $.getJSON("/User/GetCoronaStatus", function (data) {
+            data = JSON.parse(data);
+            $("#tblData tbody").find("tr").remove();
+            $.each(data, function (i, vl) {
+
+                $("#tblData tbody").append('<tr><td>' + vl.StateName + '</td><td>' + vl.Affected + '</td><td>' + vl.Death + '</td></tr>');
+                Totalaffect += vl.Affected;
+                TotalDeath += vl.Death;
+            });
+
+            $("#tblData tbody").append('<tr style="background-color:green"><td>Total</td><td>' + Totalaffect + '</td><td>'+TotalDeath+'</td></tr>');
+        });
+    }
+    function SaveData() {
+
+
+            var data = {
+                PanchyatID: $("#drpPanchyat").val(),
+                CitizenName: $("#txtName").val(),
+                AffectedDate: $("#txtDate").val(),
+                Status: $(".Rdstatus:checked").val(),
+        };
+
+            $.getJSON("/User/SaveUpdateData", data, function (data) {
+                if (data == 1) {
+                    Reset();
+                    CoronaDetails();
+                    alert("Save");
+                } else {
+                    alert("Please Check your Data.");
+
+                    txtChkValidation('txtName');
+                    txtChkValidation('txtDate');
+                    dropDownValidation('drpState');
+                    dropDownValidation('drpBlock');
+                    dropDownValidation('drpPanchyat');
+                }
+            });
+    }
+
+    function Reset() {
+        $("#drpState").val("0");
+        $("#drpBlock").find('option').not(':first').remove();
+        $("#drpPanchyat").find('option').not(':first').remove();
+        $("#txtName").val("");
+        $("#txtDate").val("");
+    }
+</script>
+<div>
+    <table class="table table-striped">
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <th>
+                            Select State
+                        </th>
+                        <td>
+                            <select id="drpState" class="form-control" onchange="dropDownValidation('drpState')" asp-items="@(new SelectList(ViewBag.drpStatus,"StateID","StateName"))">
+                                <option value="0">--Select State--</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Select Block
+                        </th>
+                        <td>
+                            <select id="drpBlock" class="form-control" onchange="dropDownValidation('drpBlock')">
+                                <option value="0">--Select Block--</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Select Panchyat
+                        </th>
+                        <td>
+                            <select id="drpPanchyat" class="form-control" onchange="dropDownValidation('drpPanchyat')">
+                                <option value="0">--Select Panchyat--</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Citizen Name
+                        </th>
+                        <td>
+                            <input type="text" id="txtName" placeholder="Enter Citizen
+                                   Name" class="form-control" onkeypress="txtChkValidation('txtName')" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Affected Date
+                        </th>
+                        <td>
+                            <input type="date" id="txtDate" class="form-control" onchange="txtChkValidation('txtDate')" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>
+                            <input type="radio" id="Rdstatus1" class="Rdstatus" name="status" value="1" checked>
+                            <label for="1">Death</label>
+                            <input type="radio" id="Rdstatus2" class="Rdstatus" name="status" value="2">
+                            <label for="2">Recover</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="right">
+                            <input type="button" id="btnSave" value="Save" class="btn-primary" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+
+            <td>
+                <table id="tblData">
+                    <thead>
+                        <tr style="background-color:green">
+                            <th>
+                                State Name
+                            </th>
+                            <th>
+                                Affted
+                            </th>
+                            <th>
+                                Death
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+</div>
