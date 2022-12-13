@@ -1,0 +1,71 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnEdit").click(function () {
+            if (txtChkValidation('txtName') == true && txtChkValidation('txtNum') == true && txtChkValidation('txtMail') == true && Phonevalidate('txtNum', 'lblErrorPhone') == true && emailValidate('txtMail', 'lblError')==true) {
+                var data = {
+                    UserName: $("#txtName").val(),
+                    PhoneNo: $("#txtNum").val(),
+                    Email: $("#txtMail").val(),
+                };
+                $.post("/User/UserUpdat", data, function (data) {
+                    if (data == 1) {
+                        alert("Updated");
+                        window.location.href = '/User/Welcome/';
+                    } else {
+                        alert("Please check data.");
+                    }
+                });
+            } else {
+                //alert("Please Enter all Text Box.");
+                txtChkValidation('txtName');
+                txtChkValidation('txtNum');
+                txtChkValidation('txtMail');
+            }
+        });
+
+
+    });
+
+</script>
+
+<div>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th colspan="2" align="justify">
+                <h3>Edit Your Profile</h3>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                User Name
+            </th>
+            <td>
+
+                <input type="text" id="txtName" value="@ViewBag.userName" onkeypress="txtChkValidation('txtName')" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Phone No.
+            </th>
+            <td>
+                <input type="number" id="txtNum" value="@ViewBag.Phone" onkeypress="txtChkValidation('txtNum')" onchange="Phonevalidate('txtNum','lblErrorPhone')" /> <span id="lblErrorPhone" style="color:red"></span>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Email
+            </th>
+            <td>
+                <input type="email" id="txtMail" value="@ViewBag.email" onkeypress="txtChkValidation('txtMail')" onchange="emailValidate('txtMail','lblError')" />  <span id="lblError" style="color:red"></span>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="button" id="btnEdit" value="Submit" />
+            </td>
+        </tr>
+    </table>
+</div>
+
