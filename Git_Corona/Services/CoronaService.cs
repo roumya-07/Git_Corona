@@ -1,4 +1,5 @@
 ﻿using Git_Corona.Models;
+using Git_Corona.Ṛepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace Git_Corona.Services
 
         public async Task<int> UserCreate(UserEntity obj)
         {
-            return await _UserRepo.UpdateCreateData(obj);
+            return await _UserRepo.SaveUpdate(obj);
         }
 
         public Task<List<UserEntity>> UserGetAll()
@@ -70,7 +71,7 @@ namespace Git_Corona.Services
 
         public async Task<int> UserUpdateCreateData(UserEntity obj)
         {
-            return await _UserRepo.UpdateCreateData(obj);
+            return await _UserRepo.SaveUpdate(obj);
         }
     }
 }
